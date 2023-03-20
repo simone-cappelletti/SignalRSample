@@ -5,9 +5,9 @@ namespace SignalRSample.Hubs
     public class HouseGroupHub : Hub
     {
         //There is no mechanism in SignalR to track if client belongs in a group or not
-        public static List<string> GroupsJoined {  get; set; } = new List<string>();
+        public static List<string> GroupsJoined { get; set; } = new List<string>();
 
-        public async Task JoinHouse (string houseName)
+        public async Task JoinHouse(string houseName)
         {
             var clientKey = $"{Context.ConnectionId}:{houseName}";
 
@@ -19,6 +19,8 @@ namespace SignalRSample.Hubs
                 await Clients.Caller.SendAsync("subscriptionStatus", GetHouseList(), houseName.ToLower(), true);
 
                 await Groups.AddToGroupAsync(Context.ConnectionId, houseName);
+
+                await NotifyHouse(houseName, true);
             }
         }
 
@@ -34,7 +36,19 @@ namespace SignalRSample.Hubs
                 await Clients.Caller.SendAsync("subscriptionStatus", GetHouseList(), houseName.ToLower(), false);
 
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, houseName);
+
+                await NotifyHouse(houseName, false);
             }
+        }
+
+        public async Task NotifyHouse(string houseName, bool hasSubscribed)
+        {
+            await Clients.Others.SendAsync("notifyHouse", houseName, hasSubscribed);
+        }
+
+        public async Task TriggerHouseNotify(string houseName)
+        {
+            await Clients.Group(houseName).SendAsync("triggerHouseNotification", houseName);
         }
 
         private string GetHouseList()
