@@ -27,7 +27,7 @@ function fulfilled() {
 }
 
 function rejected() {
-    console.log("Connection to Deathly Hallows  Hub Rejected");
+    console.log("Connection to Deathly Hallows Hub Rejected");
 }
 
 //Start connection
