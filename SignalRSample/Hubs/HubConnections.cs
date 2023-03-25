@@ -2,7 +2,7 @@
 {
     public static class HubConnections
     {
-        //UesrId = ConnectionId
+        //UserId = ConnectionId
         public static Dictionary<string, List<string>> Users = new();
 
         public static bool HasUserConnection(string UserId, string ConnectionId)
@@ -12,6 +12,23 @@
                 if (Users.ContainsKey(UserId))
                 {
                     return Users[UserId].Any(p => p.Contains(ConnectionId));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return false;
+        }
+
+        public static bool HasUser(string UserId)
+        {
+            try
+            {
+                if (Users.ContainsKey(UserId))
+                {
+                    return Users[UserId].Any();
                 }
             }
             catch (Exception ex)

@@ -68,6 +68,18 @@ namespace SignalRSample.Controllers
             return View(chatVM);
         }
 
+        public IActionResult AdvancedChat()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ChatVM chatVm = new()
+            {
+                Rooms = _context.ChatRoom.ToList(),
+                MaxRoomAllowed = 4,
+                UserID = userId,
+            };
+            return View(chatVm);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
